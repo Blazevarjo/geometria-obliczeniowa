@@ -56,7 +56,7 @@ const Form = ({ onSuccess }: IFormProps) => {
         }}
       >
         <div className={styles.segmentContainer}>
-          <label>Segment 1:</label>
+          <label>Odcinek 1:</label>
           <div>
             <div>
               <span>początek</span>
@@ -109,7 +109,7 @@ const Form = ({ onSuccess }: IFormProps) => {
           </div>
         </div>
         <div className={styles.segmentContainer}>
-          <label>Segment 2:</label>
+          <label>Odcinek 2:</label>
           <div>
             <div>
               <span>początek</span>

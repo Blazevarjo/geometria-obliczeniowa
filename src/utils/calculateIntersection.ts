@@ -9,10 +9,16 @@ export function calculateIntersection(
   segment1: Segment,
   segment2: Segment
 ): Intersection | null {
-  const { start: p, end: q } = segment1;
-  const { start: r, end: s } = segment2;
+  const {
+    start: { x: x1, y: y1 },
+    end: { x: x2, y: y2 },
+  } = segment1;
+  const {
+    start: { x: x3, y: y3 },
+    end: { x: x4, y: y4 },
+  } = segment2;
 
-  const denominator = (q.y - p.y) * (s.x - r.x) - (q.x - p.x) * (s.y - r.y);
+  const denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
 
   if (denominator === 0) {
     // Odcinki są równoległe lub leżą na tej samej linii
@@ -29,15 +35,13 @@ export function calculateIntersection(
     return null;
   }
 
-  const ua =
-    ((s.x - r.x) * (p.y - r.y) - (s.y - r.y) * (p.x - r.x)) / denominator;
-  const ub =
-    ((q.x - p.x) * (p.y - r.y) - (q.y - p.y) * (p.x - r.x)) / denominator;
+  const ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
+  const ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator;
 
   if (ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1) {
-    // Oblicz punkt przecięcia
-    const intersectionX = p.x + ua * (q.x - p.x);
-    const intersectionY = p.y + ua * (q.y - p.y);
+    // Punkt przecięcia znajduje się wewnątrz obu odcinków.
+    const intersectionX = x1 + ua * (x2 - x1);
+    const intersectionY = y1 + ua * (y2 - y1);
     return { x: intersectionX, y: intersectionY, type: "point" };
   }
 
@@ -83,13 +87,16 @@ function doSegmentsOverlap(segment1: Segment, segment2: Segment) {
 }
 
 function isPointOnSegment(point: Point, segment: Segment) {
-  const { start: p, end: q } = segment;
+  const { start, end } = segment;
+  const { x: x1, y: y1 } = start;
+  const { x: x2, y: y2 } = end;
+
   return (
-    point.x >= Math.min(p.x, q.x) &&
-    point.x <= Math.max(p.x, q.x) &&
-    point.y >= Math.min(p.y, q.y) &&
-    point.y <= Math.max(p.y, q.y) &&
-    getOrientation(p, q, point) === 0
+    point.x >= Math.min(x1, x2) &&
+    point.x <= Math.max(x1, x2) &&
+    point.y >= Math.min(y1, y2) &&
+    point.y <= Math.max(y1, y2) &&
+    getOrientation(start, end, point) === 0
   );
 }
 
@@ -97,10 +104,19 @@ function calculateOverlap(
   segment1: Segment,
   segment2: Segment
 ): IntersectionSegment {
-  const overlapStartX = Math.max(segment1.start.x, segment2.start.x);
-  const overlapStartY = Math.max(segment1.start.y, segment2.start.y);
-  const overlapEndX = Math.min(segment1.end.x, segment2.end.x);
-  const overlapEndY = Math.min(segment1.end.y, segment2.end.y);
+  const {
+    start: { x: x1, y: y1 },
+    end: { x: x2, y: y2 },
+  } = segment1;
+  const {
+    start: { x: x3, y: y3 },
+    end: { x: x4, y: y4 },
+  } = segment2;
+
+  const overlapStartX = Math.max(x1, x3);
+  const overlapStartY = Math.max(y1, y3);
+  const overlapEndX = Math.min(x2, x4);
+  const overlapEndY = Math.min(y2, y4);
 
   return {
     start: { x: overlapStartX, y: overlapStartY },
