@@ -117,7 +117,10 @@ function calculateOverlap(
   const overlapStartY = Math.max(y1, y3);
   const overlapEndX = Math.min(x2, x4);
   const overlapEndY = Math.min(y2, y4);
-
+  if (overlapStartX === overlapEndX && overlapStartY === overlapEndY) {
+    // Jeśli tak, zwróć pojedynczy punkt
+    return { x: overlapStartX, y: overlapStartY, type: "point" };
+  }
   return {
     start: { x: overlapStartX, y: overlapStartY },
     end: { x: overlapEndX, y: overlapEndY },
