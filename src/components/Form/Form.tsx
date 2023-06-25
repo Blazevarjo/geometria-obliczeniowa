@@ -40,14 +40,25 @@ const Form = ({ onSuccess }: IFormProps) => {
     setForm((previousForm) => {
       const newForm = { ...previousForm };
       const value = e.target.valueAsNumber;
-      objectPath.set(newForm, e.target.name, isNaN(value) ? "" : value);
+      const decimals = value.toString().split(".")?.[1]?.length || 0;
+      objectPath.set(
+        newForm,
+        e.target.name,
+        isNaN(value) ? "" : decimals > 3 ? value.toFixed(3) : value
+      );
       validateForm(newForm);
       return newForm;
     });
   }, []);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", rowGap: "24px" }}>
+    <form
+      style={{ display: "flex", flexDirection: "column", rowGap: "24px" }}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSuccess(form);
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -157,10 +168,10 @@ const Form = ({ onSuccess }: IFormProps) => {
           </div>
         </div>
       </div>
-      <button onClick={() => onSuccess(form)} disabled={!isValidForm}>
+      <button disabled={!isValidForm} type="submit">
         Oblicz przecięcie
       </button>
-    </div>
+    </form>
   );
 };
 
