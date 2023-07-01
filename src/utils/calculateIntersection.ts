@@ -1,9 +1,4 @@
-import {
-  Intersection,
-  IntersectionSegment,
-  Point,
-  Segment,
-} from "../global.types";
+import { Intersection, Point, Segment } from "../global.types";
 
 export function calculateIntersection(
   segment1: Segment,
@@ -100,10 +95,7 @@ function isPointOnSegment(point: Point, segment: Segment) {
   );
 }
 
-function calculateOverlap(
-  segment1: Segment,
-  segment2: Segment
-): IntersectionSegment {
+function calculateOverlap(segment1: Segment, segment2: Segment): Intersection {
   const {
     start: { x: x1, y: y1 },
     end: { x: x2, y: y2 },
